@@ -17,3 +17,5 @@ data/*.txt
 models/
 *.bin
 *.safetensors
+.env
+*.pyc
