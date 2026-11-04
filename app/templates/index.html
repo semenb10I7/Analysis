@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ тональности</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Анализ тональности</h1>
+            <p>Локальный анализ отзывов (ru/en)</p>
+        </header>
+        <section class="card" id="upload-section">
+            <h2>1. Загрузите файлы</h2>
+            <input type="file" id="file-input" multiple accept=".txt,.docx,.pdf,.xlsx,.csv">
+            <button id="btn-upload" class="btn">Загрузить и проанализировать</button>
+            <div id="upload-status" class="status-text"></div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <span style="font-size: 14px; font-weight: 500;">Или загрузите сохранённую сессию:</span><br>
+                <input type="file" id="json-input" accept=".json" style="margin-top: 8px;">
+                <button id="btn-load-json" class="btn btn-small" style="background: #8b5cf6;">Загрузить из JSON</button>
+            </div>
+        </section>
+        <section class="card hidden" id="progress-section">
+            <h2>2. Обработка</h2>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="progress-text" class="status-text">0%</div>
+        </section>
+        <section class="card hidden" id="results-section">
+            <h2>3. Результаты</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="search-input">Поиск по тексту:</label>
+                    <input type="text" id="search-input" placeholder="Например: доставка...">
+                </div>               
+                <div class="control-group">
+                    <label for="filter-sentiment">Тональность:</label>
+                    <select id="filter-sentiment">
+                        <option value="all">Все</option>
+                        <option value="negative">Негативные</option>
+                        <option value="neutral">Нейтральные</option>
+                        <option value="positive">Позитивные</option>
+                    </select>
+                </div>
+            </div>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th data-sort="filename">Файл ↕</th>
+                        <th data-sort="text">Текст ↕</th>
+                        <th data-sort="language">Язык ↕</th>
+                        <th data-sort="sentiment_label">Тональность ↕</th>
+                        <th data-sort="sentiment_confidence">Уверенность ↕</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+            </table>           
+            <div id="no-results" class="status-text hidden" style="text-align: center; padding: 20px;">
+                Ничего не найдено по заданным фильтрам.
+            </div>
+            <div class="export-controls">
+                <span>Экспорт:</span>
+                <button class="btn btn-small btn-outline" onclick="exportData('csv')">Скачать CSV</button>
+                <button class="btn btn-small btn-outline" onclick="exportData('excel')">Скачать Excel</button>
+                <button class="btn btn-small btn-outline" onclick="exportData('pdf')">Скачать PDF</button>
+                <button class="btn btn-small btn-outline" style="margin-left: 10px; color: #8b5cf6; border-color: #8b5cf6;" onclick="exportData('json')">Сохранить сессию (JSON)</button>
+            </div>
+        </section>
+        <section class="card hidden" id="stats-section">
+            <h2>4. Визуализация</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Распределение тональностей</h3>
+                    <canvas id="pie-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Топ-10 слов</h3>
+                    <canvas id="bar-chart"></canvas>
+                </div>
+            </div>
+            <div class="wordcloud-container">
+                <h3>Облако слов</h3>
+                <div id="wordcloud" style="width: 100%; height: 350px; background: #f9fafb; border-radius: 8px;"></div>
+            </div>
+        </section>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>
